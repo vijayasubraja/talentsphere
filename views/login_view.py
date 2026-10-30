@@ -49,8 +49,6 @@ def render_login_page(initial_tab: str = "signin", cookie_controller: Any = None
     logo_uri = _get_base64_image(logo_path)
 
     career_img_path = os.path.join("assets", "career_growth.png")
-    if not os.path.exists(career_img_path):
-        career_img_path = os.path.join("assets", "career_growth_clean.png")
     career_img_uri = _get_base64_image(career_img_path)
 
     # 4. Inject clean, modern styles
