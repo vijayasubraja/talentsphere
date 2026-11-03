@@ -48,7 +48,7 @@ def test_sidebar_expanded_structure():
     options = list(radio.options)
     assert len(options) == 5
     assert any("Dashboard" in opt for opt in options)
-    assert any("Employee Profile" in opt for opt in options)
+    assert any(opt in ("Profile", "Employee Profile") or "Profile" in opt for opt in options)
     assert any("Skills & Goals" in opt for opt in options)
     assert any("Resume Builder" in opt for opt in options)
     assert any("Career Development" in opt for opt in options)
@@ -86,7 +86,7 @@ def test_sidebar_search_filtering():
     radio = at.sidebar.radio[0]
     options = list(radio.options)
     assert len(options) == 1
-    assert "Employee Profile" in options[0]
+    assert options[0] in ("Profile", "Employee Profile") or "Profile" in options[0]
 
     # Clear button clears filter
     at.sidebar.button(key="btn_clear_nav_search").click()
@@ -184,8 +184,105 @@ def test_no_horizontal_top_navbar_on_dashboard_and_exclusive_vertical_sidebar():
     options = list(radio.options)
     assert len(options) == 5
     assert any("Dashboard" in opt for opt in options)
-    assert any("Employee Profile" in opt for opt in options)
+    assert any(opt in ("Profile", "Employee Profile") or "Profile" in opt for opt in options)
     assert any("Skills & Goals" in opt for opt in options)
     assert any("Resume Builder" in opt for opt in options)
     assert any("Career Development" in opt for opt in options)
+
+
+def test_view_profile_button_navigates_to_employee_profile():
+    """Verify that clicking the View Profile button navigates directly to Employee Profile."""
+    at = AppTest.from_file(APP_PATH, default_timeout=30)
+    at.session_state["is_authenticated"] = True
+    at.session_state["user_id"] = 1
+    at.session_state["current_page"] = "Dashboard"
+    at.session_state["sidebar_collapsed"] = False
+    at.run()
+    assert not at.exception
+
+    btn = at.sidebar.button(key="btn_sidebar_view_profile")
+    assert btn is not None
+    btn.click()
+    at.run()
+    assert not at.exception
+    assert at.session_state["current_page"] == "Employee Profile"
+
+
+def test_sidebar_default_expanded_on_startup():
+    """Verify sidebar is expanded by default without requiring manual expand click."""
+    at = AppTest.from_file(APP_PATH, default_timeout=30)
+    at.session_state["is_authenticated"] = True
+    at.session_state["user_id"] = 1
+    at.session_state["current_page"] = "Dashboard"
+    at.run()
+    assert not at.exception
+    assert at.session_state.get("sidebar_collapsed") is False
+    assert at.sidebar.button(key="btn_sidebar_collapse") is not None
+
+
+def test_sidebar_account_settings_and_popover():
+    """Verify Account Settings popover is visible and its profile button works."""
+    at = AppTest.from_file(APP_PATH, default_timeout=30)
+    at.session_state["is_authenticated"] = True
+    at.session_state["user_id"] = 1
+    at.session_state["current_page"] = "Dashboard"
+    at.session_state["sidebar_collapsed"] = False
+    at.run()
+    assert not at.exception
+    assert at.sidebar.button(key="btn_account_popover_profile") is not None
+    at.sidebar.button(key="btn_account_popover_profile").click()
+    at.run()
+    assert not at.exception
+    assert at.session_state["current_page"] == "Employee Profile"
+
+
+def test_sidebar_css_width_and_lucide_outline_icons():
+    """Verify CSS sets 290px width (285-300px range), removes white circles, and targets all Lucide outline icons."""
+    css = get_dark_theme_css()
+    assert "width: 290px !important" in css
+    assert "min-width: 290px !important" in css
+    assert "max-width: 290px !important" in css
+    # Lucide outline icons in CSS
+    assert "circle cx='12' cy='8' r='5'" in css  # user-round
+    assert "circle cx='12' cy='12' r='10'" in css  # target
+    assert "path d='M14 2v4a2 2 0 0 0 2 2h4'" in css  # file-user
+    assert "polyline points='22 7 13.5 15.5 8.5 10.5 2 17'" in css  # trending-up
+    assert "M12.22 2h-.44a2 2 0 0 0-2 2" in css  # settings
+    # Toggle icons (panel-left-close & panel-left-open)
+    assert "m16 15-3-3 3-3" in css  # panel-left-close
+    assert "m14 9 3 3-3 3" in css  # panel-left-open
+    # Identical 48px height for all nav buttons
+    assert "height: 48px !important" in css
+    # No purple accents in sidebar section
+    sidebar_css_block = css.split("/* 2. Sidebar Redesign")[1].split("/* 3. Elevated Cards")[0]
+    assert "purple" not in sidebar_css_block.lower()
+
+
+def test_sidebar_profile_label_renaming():
+    """Verify navigation label for Employee Profile is displayed as Profile."""
+    at = AppTest.from_file(APP_PATH, default_timeout=30)
+    at.session_state["is_authenticated"] = True
+    at.session_state["user_id"] = 1
+    at.session_state["current_page"] = "Dashboard"
+    at.run()
+    assert not at.exception
+
+    # Check that NavItem supports both Profile and Employee Profile
+    radio = at.sidebar.radio[0]
+    options = list(radio.options)
+    assert any("Profile" in opt for opt in options)
+
+    # Navigate to Profile using set_value("Profile")
+    radio.set_value("Profile")
+    at.run()
+    assert not at.exception
+    assert at.session_state["current_page"] == "Employee Profile"
+
+    # Also verify set_value("Employee Profile")
+    radio.set_value("Employee Profile")
+    at.run()
+    assert not at.exception
+    assert at.session_state["current_page"] == "Employee Profile"
+
+
 

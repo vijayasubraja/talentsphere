@@ -551,19 +551,19 @@ def test_sidebar_navigation_clicks_all_items():
     options = list(radio.options)
     # Check that required 4 items are present
     assert any("Dashboard" in opt for opt in options)
-    assert any("Employee Profile" in opt for opt in options)
+    assert any(opt in ("Profile", "Employee Profile") or "Profile" in opt for opt in options)
     assert any("Skills & Goals" in opt for opt in options)
     assert any("Career Development" in opt for opt in options)
 
-    # 1. Click Employee Profile
+    # 1. Click Profile
     for opt in options:
-        if "Employee Profile" in opt:
+        if opt in ("Profile", "Employee Profile") or "Profile" in opt:
             radio.set_value(opt)
             break
     at.run()
     assert not at.exception
     assert at.session_state["current_page"] == "Employee Profile"
-    assert "Employee Profile" in at.sidebar.radio[0].value
+    assert at.sidebar.radio[0].value in ("Profile", "Employee Profile") or "Profile" in at.sidebar.radio[0].value
 
     # 2. Click Skills & Goals
     radio = at.sidebar.radio[0]

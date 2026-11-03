@@ -1095,20 +1095,33 @@ def get_dark_theme_css() -> str:
         background: transparent !important;
     }
 
-    /* 2. Sidebar Redesign (Dashdark X SaaS Inspired · Deep Navy #0D111D with Cyan/Pink Accents) */
+    /* 2. Sidebar Redesign (Dark Charcoal & Modern Teal/Cyan SaaS Theme) */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"] * {
+        font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+
     section[data-testid="stSidebar"] {
-        background: #0D111D !important;
-        background-color: #0D111D !important;
+        background: #0B0E17 !important;
+        background-color: #0B0E17 !important;
+        /* Token compatibility: #0D111D */
         border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6) !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+        width: 290px !important;
+        transition: min-width 0.28s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     section[data-testid="stSidebar"] .block-container {
         padding-top: 1rem !important;
-        padding-left: 1.15rem !important;
-        padding-right: 1.15rem !important;
+        padding-left: 0.95rem !important;
+        padding-right: 0.95rem !important;
         padding-bottom: 2rem !important;
+        max-width: 290px !important;
+        box-sizing: border-box !important;
     }
 
     .ts-sidebar-brand {
@@ -1121,21 +1134,92 @@ def get_dark_theme_css() -> str:
         text-align: left !important;
     }
 
-    /* Sidebar Search Input (Dashdark X compact rounded search) */
+    /* Collapse / Expand Toggle Buttons with Lucide panel-left-close & panel-left-open */
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_collapse"],
+    section[data-testid="stSidebar"] div:has(> .ts-collapse-btn-anchor) div.stButton button,
+    section[data-testid="stSidebar"] div[data-testid="column"]:last-child div.stButton button {
+        background: #161A29 !important;
+        border: 1px solid rgba(0, 210, 255, 0.25) !important;
+        border-radius: 8px !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        padding: 0 !important;
+        min-height: 38px !important;
+        height: 38px !important;
+        width: 100% !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: 20px 20px !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18'/%3E%3Cpath d='m16 15-3-3 3-3'/%3E%3C/svg%3E") !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_collapse"]:hover,
+    section[data-testid="stSidebar"] div:has(> .ts-collapse-btn-anchor) div.stButton button:hover,
+    section[data-testid="stSidebar"] div[data-testid="column"]:last-child div.stButton button:hover {
+        background-color: rgba(0, 210, 255, 0.15) !important;
+        border-color: #00D2FF !important;
+        box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18'/%3E%3Cpath d='m16 15-3-3 3-3'/%3E%3C/svg%3E") !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_collapse"] p,
+    section[data-testid="stSidebar"] div:has(> .ts-collapse-btn-anchor) div.stButton button p,
+    section[data-testid="stSidebar"] div[data-testid="column"]:last-child div.stButton button p {
+        display: none !important;
+        font-size: 0 !important;
+        visibility: hidden !important;
+    }
+
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_expand"],
+    section[data-testid="stSidebar"] div:has(> .ts-expand-btn-anchor) div.stButton button {
+        background: #161A29 !important;
+        border: 1px solid rgba(0, 210, 255, 0.25) !important;
+        border-radius: 8px !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        padding: 0 !important;
+        min-height: 38px !important;
+        height: 38px !important;
+        width: 100% !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: 20px 20px !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18'/%3E%3Cpath d='m14 9 3 3-3 3'/%3E%3C/svg%3E") !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_expand"]:hover,
+    section[data-testid="stSidebar"] div:has(> .ts-expand-btn-anchor) div.stButton button:hover {
+        background-color: rgba(0, 210, 255, 0.15) !important;
+        border-color: #00D2FF !important;
+        box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18'/%3E%3Cpath d='m14 9 3 3-3 3'/%3E%3C/svg%3E") !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_expand"] p,
+    section[data-testid="stSidebar"] div:has(> .ts-expand-btn-anchor) div.stButton button p {
+        display: none !important;
+        font-size: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* Sidebar Search Input (Compact dark input with teal focus glow) */
     section[data-testid="stSidebar"] div[data-testid="stTextInput"] {
         margin-bottom: 0.45rem !important;
+        width: 100% !important;
     }
 
     section[data-testid="stSidebar"] div[data-testid="stTextInput"] input {
-        background: #161A29 !important;
-        background-color: #161A29 !important;
-        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        background: #121624 !important;
+        background-color: #121624 !important;
+        border: 1px solid rgba(0, 210, 255, 0.22) !important;
         border-radius: 10px !important;
         color: #FFFFFF !important;
         font-size: 0.88rem !important;
         padding: 0.52rem 0.85rem !important;
         transition: all 0.2s ease !important;
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        width: 100% !important;
+        height: 40px !important;
     }
 
     section[data-testid="stSidebar"] div[data-testid="stTextInput"] input::placeholder {
@@ -1145,114 +1229,379 @@ def get_dark_theme_css() -> str:
 
     section[data-testid="stSidebar"] div[data-testid="stTextInput"] input:focus {
         border-color: #00D2FF !important;
-        box-shadow: 0 0 12px rgba(0, 210, 255, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 0 10px rgba(0, 210, 255, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
         outline: none !important;
     }
 
-    /* Sidebar Radio Options (Clickable without circles, larger fonts/icons, glowing active highlight) */
+    /* Sidebar Radio Options (Identical outer box dimensions, clean SaaS styling, no decorative arrows) */
     section[data-testid="stSidebar"] div[role="radiogroup"] {
-        gap: 0.45rem !important;
+        gap: 0.35rem !important;
         display: flex !important;
         flex-direction: column !important;
-    }
-
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label {
-        padding: 0.76rem 1.05rem !important;
-        margin-bottom: 0.35rem !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.07) !important;
-        border-left: 3.5px solid transparent !important;
-        font-weight: 600 !important;
-        font-size: 1.05rem !important;
-        color: #CBD5E1 !important;
-        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        background: rgba(22, 26, 41, 0.6) !important;
-        cursor: pointer !important;
-        display: flex !important;
-        align-items: center !important;
         width: 100% !important;
-        box-sizing: border-box !important;
-        position: relative !important;
     }
 
-    /* Completely hide radio circle indicator in sidebar */
-    section[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child,
-    section[data-testid="stSidebar"] div[data-testid="stRadio"] label > div:first-child,
-    section[data-testid="stSidebar"] div[data-baseweb="radio"] > div:first-child,
-    section[data-testid="stSidebar"] div[role="radiogroup"] label div[data-testid="stRadioCircle"] {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div {
+        width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label p,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label span,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label,
+    section[data-testid="stSidebar"] div[role="radiogroup"] [data-testid="stRadioOption"] {
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+        width: 100% !important;
+        padding: 0 1rem !important;
+        margin: 0 0 0.35rem 0 !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(255, 255, 255, 0.07) !important;
+        border-left: 3.5px solid transparent !important;
+        font-weight: 600 !important;
+        font-size: 0.98rem !important;
+        color: #CBD5E1 !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: #121624 !important;
+        cursor: pointer !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] label > div,
+    section[data-testid="stSidebar"] div[role="radiogroup"] [data-testid="stRadioOption"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: transparent !important;
+    }
+
+    /* Completely hide all radio circle indicators, dots and bullets */
+    section[data-testid="stSidebar"] div[role="radiogroup"] [class*="e1dm8mpf4"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] [class*="e1dm8mpf5"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label > div > div:first-child:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])),
+    section[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child,
+    section[data-testid="stSidebar"] div[data-testid="stRadio"] label > div:first-child,
+    section[data-testid="stSidebar"] div[data-baseweb="radio"] > div:first-child,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label div[data-testid="stRadioCircle"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] input[type="radio"] {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+
+    /* Lucide Outline Icons via SVG data URIs (Consistent 22px size) */
+    section[data-testid="stSidebar"] div[role="radiogroup"] label::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        max-width: 22px !important;
+        margin-right: 0.75rem !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: contain !important;
+        flex-shrink: 0 !important;
+        transition: opacity 0.2s ease !important;
+        opacity: 0.85 !important;
+        align-self: center !important;
+    }
+
+    /* 1. Dashboard: Lucide layout-dashboard */
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(1) label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="0"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Dashboard"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label:nth-of-type(1)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='7' height='9' x='3' y='3' rx='1'/%3E%3Crect width='7' height='5' x='14' y='3' rx='1'/%3E%3Crect width='7' height='9' x='14' y='12' rx='1'/%3E%3Crect width='7' height='5' x='3' y='16' rx='1'/%3E%3C/svg%3E") !important;
+    }
+
+    /* 2. Profile: Lucide user-round */
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(2) label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="1"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Profile"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label:nth-of-type(2)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='5'/%3E%3Cpath d='M20 21a8 8 0 0 0-16 0'/%3E%3C/svg%3E") !important;
+    }
+
+    /* 3. Skills & Goals: Lucide target */
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(3) label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="2"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Skills"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label:nth-of-type(3)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E") !important;
+    }
+
+    /* 4. Resume Builder: Lucide file-user */
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(4) label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="3"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Resume"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label:nth-of-type(4)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2v4a2 2 0 0 0 2 2h4'/%3E%3Cpath d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z'/%3E%3Ccircle cx='12' cy='13' r='2'/%3E%3Cpath d='M15 18a3 3 0 0 0-6 0'/%3E%3C/svg%3E") !important;
+    }
+
+    /* 5. Career Development: Lucide trending-up */
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(5) label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="4"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Career"])::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > label:nth-of-type(5)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17'/%3E%3Cpolyline points='16 7 22 7 22 13'/%3E%3C/svg%3E") !important;
+    }
+
+    /* Active and Hover Icons switch stroke to #00D2FF */
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] [data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-selected="true"]::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked)::before {
+        opacity: 1 !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(1) label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(1)[data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]:nth-of-type(1)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="0"]:checked)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Dashboard"]:checked)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='7' height='9' x='3' y='3' rx='1'/%3E%3Crect width='7' height='5' x='14' y='3' rx='1'/%3E%3Crect width='7' height='9' x='14' y='12' rx='1'/%3E%3Crect width='7' height='5' x='3' y='16' rx='1'/%3E%3C/svg%3E") !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(2) label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(2)[data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]:nth-of-type(2)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="1"]:checked)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Profile"]:checked)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='5'/%3E%3Cpath d='M20 21a8 8 0 0 0-16 0'/%3E%3C/svg%3E") !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(3) label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(3)[data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]:nth-of-type(3)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="2"]:checked)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Skills"]:checked)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E") !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(4) label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(4)[data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]:nth-of-type(4)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="3"]:checked)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Resume"]:checked)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2v4a2 2 0 0 0 2 2h4'/%3E%3Cpath d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z'/%3E%3Ccircle cx='12' cy='13' r='2'/%3E%3Cpath d='M15 18a3 3 0 0 0-6 0'/%3E%3C/svg%3E") !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(5) label:hover::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] > div:nth-of-type(5)[data-selected="true"] label::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"]:nth-of-type(5)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value="4"]:checked)::before,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input[value*="Career"]:checked)::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17'/%3E%3Cpolyline points='16 7 22 7 22 13'/%3E%3C/svg%3E") !important;
+    }
+
+    /* Completely remove decorative arrows and chevrons inside navigation buttons */
+    section[data-testid="stSidebar"] div[role="radiogroup"] label::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    section[data-testid="stSidebar"] div[role="radiogroup"] label p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label span,
     section[data-testid="stSidebar"] div[role="radiogroup"] label [data-testid="stMarkdownContainer"] p {
         color: #CBD5E1 !important;
         font-size: 1.05rem !important;
         font-weight: 600 !important;
         letter-spacing: -0.01em !important;
-        line-height: 1.45 !important;
+        line-height: 1 !important;
         margin: 0 !important;
+        padding: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        display: flex !important;
+        align-items: center !important;
         transition: color 0.2s ease !important;
     }
 
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-        background-color: rgba(0, 210, 255, 0.1) !important;
-        border-color: rgba(0, 210, 255, 0.35) !important;
-        transform: translateX(3px) !important;
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+        background: #161A29 !important;
+        border-color: rgba(0, 210, 255, 0.3) !important;
+        transform: translateX(2px) !important;
     }
 
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover p,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover span {
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover span {
         color: #FFFFFF !important;
     }
 
-    /* Active Nav Item with slim cyan left-indicator and subtle glow */
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"],
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
-        background: linear-gradient(90deg, rgba(0, 210, 255, 0.18) 0%, rgba(255, 42, 117, 0.12) 100%) !important;
-        color: #00D2FF !important;
+    /* Active Nav Item with Subtle Teal Highlight & Slim Cyan Left Border */
+    section[data-testid="stSidebar"] div[role="radiogroup"] div[data-selected="true"] label,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-selected="true"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {
+        background: linear-gradient(90deg, rgba(0, 210, 255, 0.18) 0%, rgba(13, 122, 130, 0.12) 100%) !important;
+        color: #FFFFFF !important;
         font-weight: 700 !important;
-        border: 1px solid #00D2FF !important;
+        border: 1px solid rgba(0, 210, 255, 0.35) !important;
         border-left: 3.5px solid #00D2FF !important;
-        border-radius: 12px !important;
-        box-shadow: 0 0 16px rgba(0, 210, 255, 0.28), inset 0 0 10px rgba(0, 210, 255, 0.1) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
     }
 
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] p,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] span,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) span,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] [data-testid="stMarkdownContainer"] p,
-    section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) [data-testid="stMarkdownContainer"] p {
-        color: #00D2FF !important;
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-selected="true"] p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-selected="true"] span,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] span,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) span,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-selected="true"] [data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] [data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) [data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
         font-weight: 700 !important;
-        text-shadow: 0 0 12px rgba(0, 210, 255, 0.6) !important;
     }
 
-    /* Sidebar Popover (Account Settings) */
+    /* View Profile Action Button */
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_view_profile"],
+    section[data-testid="stSidebar"] div:has(> .ts-view-profile-anchor) div.stButton button {
+        background: linear-gradient(90deg, rgba(0, 210, 255, 0.15) 0%, rgba(13, 122, 130, 0.15) 100%) !important;
+        border: 1px solid rgba(0, 210, 255, 0.35) !important;
+        border-radius: 8px !important;
+        color: #00D2FF !important;
+        font-size: 0.86rem !important;
+        font-weight: 700 !important;
+        padding: 0.45rem 0.75rem !important;
+        min-height: 38px !important;
+        height: 38px !important;
+        margin-bottom: 0.45rem !important;
+        width: 100% !important;
+        transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_view_profile"]:hover,
+    section[data-testid="stSidebar"] div:has(> .ts-view-profile-anchor) div.stButton button:hover {
+        background: rgba(0, 210, 255, 0.25) !important;
+        border-color: #00D2FF !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 12px rgba(0, 210, 255, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Modern Logout Button with Coral/Red Accent */
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_signout"] {
+        background: rgba(255, 42, 117, 0.12) !important;
+        border: 1px solid rgba(244, 63, 94, 0.45) !important;
+        border-radius: 10px !important;
+        color: #FDA4AF !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        padding: 0.45rem 0.65rem !important;
+        min-height: 36px !important;
+        height: 36px !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_signout"]:hover {
+        background: rgba(244, 63, 94, 0.22) !important;
+        border-color: #F43F5E !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 12px rgba(244, 63, 94, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Reset Data Button (Neutral Charcoal with Cyan Hover) */
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_reset"] {
+        background: #161A29 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 10px !important;
+        color: #CBD5E1 !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        padding: 0.45rem 0.65rem !important;
+        min-height: 36px !important;
+        height: 36px !important;
+        transition: all 0.2s ease !important;
+    }
+    section[data-testid="stSidebar"] div.stButton button[key="btn_sidebar_reset"]:hover {
+        border-color: #00D2FF !important;
+        color: #00D2FF !important;
+        background: rgba(0, 210, 255, 0.10) !important;
+    }
+
+    /* Sidebar Popover (Account Settings - Clean, No Overlapping Text, and Lucide Settings Icon) */
     section[data-testid="stSidebar"] div[data-testid="stPopover"] {
         margin-bottom: 0.65rem !important;
+        width: 100% !important;
     }
 
     section[data-testid="stSidebar"] div[data-testid="stPopover"] > button {
-        background: rgba(22, 26, 41, 0.85) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: #161A29 !important;
+        border: 1px solid rgba(0, 210, 255, 0.22) !important;
         color: #CBD5E1 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         font-size: 0.84rem !important;
+        font-weight: 600 !important;
         padding: 0.45rem 0.85rem !important;
+        min-height: 38px !important;
+        height: 38px !important;
         transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stPopover"] > button::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: contain !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2300D2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") !important;
+        flex-shrink: 0 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stPopover"] > button [data-testid="stMarkdownContainer"] {
+        flex: 1 !important;
+        text-align: left !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stPopover"] > button svg,
+    section[data-testid="stSidebar"] div[data-testid="stPopover"] > button [data-testid="stIconMaterial"],
+    section[data-testid="stSidebar"] div[data-testid="stPopover"] > button span[class*="material"] {
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+        width: 18px !important;
+        height: 18px !important;
+        color: #00D2FF !important;
     }
 
     section[data-testid="stSidebar"] div[data-testid="stPopover"] > button:hover {
         border-color: #00D2FF !important;
-        color: #00D2FF !important;
+        color: #FFFFFF !important;
         box-shadow: 0 0 10px rgba(0, 210, 255, 0.25) !important;
     }
 
@@ -1260,6 +1609,7 @@ def get_dark_theme_css() -> str:
     @media (max-width: 768px) {
         section[data-testid="stSidebar"] {
             box-shadow: 0 0 32px rgba(0, 0, 0, 0.85) !important;
+            max-width: 85vw !important;
         }
     }
 

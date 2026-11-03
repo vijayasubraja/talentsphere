@@ -1285,17 +1285,17 @@ CATEGORY_STEPS = [
     },
     {
         "step": 5,
+        "id": "skills",
+        "title": "Skills",
+        "icon": "⚡",
+        "description": "Add your technical competencies and professional skills. Select proficiency using the 5 circular indicators.",
+    },
+    {
+        "step": 6,
         "id": "projects",
         "title": "Projects",
         "icon": "🚀",
         "description": "Showcase personal, academic, or enterprise projects with measurable outcomes and technologies used.",
-    },
-    {
-        "step": 6,
-        "id": "skills",
-        "title": "Technical and Professional Skills",
-        "icon": "⚡",
-        "description": "Add your technical competencies and professional skills. Select proficiency using the 5 circular indicators.",
     },
     {
         "step": 7,
@@ -1669,7 +1669,9 @@ def render_resume_editor_screen(
     # LEFT PANEL: 50% RESUME EDITOR (ONE CATEGORY AT A TIME)
     # =========================================================================
     with col_editor:
-        # Top Header: Resume strength and Step Progress
+        # Top Header: Step progress and Content Strength
+        step_pct = current_step * 10
+        render_progress_bar(f"🚀 Resume Progress ({step_pct}% Complete) — Step {current_step} of 10", step_pct, color_scheme="cyan" if step_pct >= 70 else "pink")
         render_progress_bar(f"📊 {strength_pct}% Strength", strength_pct, color_scheme="cyan" if strength_pct >= 70 else "pink")
 
         render_html(f"""<div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; margin-bottom:0.25rem;">
@@ -1677,7 +1679,7 @@ def render_resume_editor_screen(
                 {step_info['icon']} Step {current_step} of 10: {step_info['title']}
             </div>
             <div style="font-size:0.78rem; font-weight:700; color:#7965D8; background:rgba(121,101,216,0.18); border:1px solid #7965D8; padding:2px 10px; border-radius:9999px;">
-                {current_step * 10}% Complete
+                {step_pct}% Complete
             </div>
         </div>
         <div class="res-sec-desc">{step_info['description']}</div>""")
@@ -1917,6 +1919,14 @@ def render_resume_editor_screen(
                             )
                             exp["responsibilities"] = [l.strip().lstrip("•- ") for l in new_resp.splitlines() if l.strip()]
 
+                with st.expander("✨ AI Action Verbs & Bullet Enhancer", expanded=False):
+                    st.caption("Copy high-impact, quantifiable bullet templates into your roles:")
+                    st.markdown("""
+- **Impact & Scale:** *Spearheaded the redesign of core services, decreasing latency by 35% and supporting 2M+ active daily queries.*
+- **Optimization:** *Automated CI/CD validation pipelines, reducing release deployment cycle times from 4 hours to 18 minutes.*
+- **Leadership:** *Mentored 5 junior engineers and established architectural review standards across 3 agile squads.*
+                    """)
+
                 if st.button("➕ Add Experience / Internship", key="btn_add_experience", type="primary", use_container_width=True):
                     experiences.append({
                         "role": "Software Developer Intern",
@@ -2014,8 +2024,135 @@ def render_resume_editor_screen(
                     resume_data["education"] = educations
                     st.rerun()
 
-            # STEP 5: PROJECTS
+            # STEP 5: TECHNICAL AND PROFESSIONAL SKILLS
             elif current_step == 5:
+                skills = resume_data.get("skills", [])
+                if not isinstance(skills, list):
+                    skills = []
+
+                tgl_show_prof = st.toggle(
+                    "Include proficiency levels on exported resume PDF & preview",
+                    value=resume_data.get("show_skill_proficiency", True),
+                    key="tgl_skill_prof_export",
+                    help="Switch off to hide proficiency tags from the resume while preserving your saved proficiency data.",
+                )
+                resume_data["show_skill_proficiency"] = tgl_show_prof
+
+                render_html("<div style='height: 8px;'></div>")
+
+                c_sk_name, c_sk_cat, c_sk_add = st.columns([2.6, 1.8, 1.2], gap="medium")
+                with c_sk_name:
+                    input_nonce = st.session_state.get("skill_input_nonce", 0)
+                    new_sk_name = st.text_input(
+                        "Skill Name",
+                        placeholder="e.g. Python, React, Docker, Machine Learning",
+                        key=f"txt_add_skill_{input_nonce}",
+                    )
+                with c_sk_cat:
+                    cat_options = ["Technical Skills", "Professional Skills", "Soft Skills", "Tools & Frameworks", "Leadership"]
+                    saved_cat_idx = st.session_state.get("last_skill_cat_idx", 0)
+                    new_sk_cat = st.selectbox(
+                        "Category",
+                        options=cat_options,
+                        index=saved_cat_idx if saved_cat_idx < len(cat_options) else 0,
+                        key="sel_add_skill_cat",
+                    )
+                with c_sk_add:
+                    render_html("<div class='add-skill-btn-marker'></div>")
+                    if st.button("➕ Add Skill", key="btn_add_single_skill", type="primary", use_container_width=True):
+                        val = new_sk_name.strip()
+                        if not val:
+                            st.error("Please enter a skill name before clicking Add.")
+                        elif any(s.get("name", "").strip().lower() == val.lower() for s in skills if isinstance(s, dict)):
+                            st.warning(f"Skill '{val}' is already present in your skills list.")
+                        else:
+                            skills.append({
+                                "name": val,
+                                "category": new_sk_cat,
+                                "proficiency": "Experienced",
+                            })
+                            resume_data["skills"] = skills
+                            st.session_state["skill_input_nonce"] = input_nonce + 1
+                            st.session_state["last_skill_cat_idx"] = cat_options.index(new_sk_cat)
+                            st.toast(f"Added skill '{val}' under {new_sk_cat}!", icon="✅")
+                            st.rerun()
+
+                with st.expander("✨ AI Recommended Skills for your Role", expanded=False):
+                    role_hint = resume_data.get("job_title", "Software Engineer")
+                    st.caption(f"Curated top competencies based on target title: **{role_hint}**")
+                    ai_rec_skills = [
+                        {"name": "System Architecture", "category": "Technical Skills", "proficiency": "Advanced"},
+                        {"name": "CI/CD & DevOps", "category": "Tools & Frameworks", "proficiency": "Experienced"},
+                        {"name": "Cloud Computing (AWS/GCP)", "category": "Technical Skills", "proficiency": "Experienced"},
+                        {"name": "Cross-Functional Collaboration", "category": "Leadership", "proficiency": "Expert"},
+                    ]
+                    rec_cols = st.columns(len(ai_rec_skills))
+                    for r_idx, r_sk in enumerate(ai_rec_skills):
+                        with rec_cols[r_idx]:
+                            if st.button(f"+ {r_sk['name']}", key=f"btn_add_ai_rec_skill_{r_idx}", use_container_width=True):
+                                if not any(s.get("name", "").lower() == r_sk["name"].lower() for s in skills if isinstance(s, dict)):
+                                    skills.append(copy.deepcopy(r_sk))
+                                    resume_data["skills"] = skills
+                                    st.toast(f"Added {r_sk['name']} to skills!", icon="✨")
+                                    st.rerun()
+
+                if skills:
+                    render_html("<div style='height: 12px;'></div>")
+                    for i, sk in enumerate(skills):
+                        if isinstance(sk, dict):
+                            s_name = sk.get("name", "Skill")
+                            s_cat = sk.get("category", "Technical")
+                            curr_prof = sk.get("proficiency", "Experienced")
+
+                            mapping = {"Intermediate": "Experienced", "Novice": "Beginner", "Proficient": "Skillful", "Master": "Expert"}
+                            if curr_prof in mapping:
+                                curr_prof = mapping[curr_prof]
+                                sk["proficiency"] = curr_prof
+                            elif curr_prof not in [p["level"] for p in PROFICIENCY_LEVELS]:
+                                curr_prof = "Experienced"
+                                sk["proficiency"] = curr_prof
+
+                            curr_step_idx = next((p["step"] for p in PROFICIENCY_LEVELS if p["level"] == curr_prof), 3)
+                            active_color = next((p["color"] for p in PROFICIENCY_LEVELS if p["level"] == curr_prof), "#22C55E")
+
+                            with st.container(border=True):
+                                c_card_top, c_sdup, c_sdel = st.columns([5.2, 0.6, 0.6])
+                                with c_card_top:
+                                    render_html(f"""<div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex-wrap: wrap;">
+                                        <span style="font-weight: 800; font-size: 1rem; color: #FFFFFF;">{s_name}</span>
+                                        <span style="background: #24242F; color: #E0E0EA; border: 1px solid #34343D; font-size: 0.70rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">{s_cat}</span>
+                                    </div>""")
+                                with c_sdup:
+                                    if st.button("📋", key=f"btn_dup_sk_{i}", help=f"Duplicate {s_name}"):
+                                        skills.insert(i + 1, copy.deepcopy(sk))
+                                        resume_data["skills"] = skills
+                                        st.rerun()
+                                with c_sdel:
+                                    if st.button("🗑️", key=f"btn_del_sk_{i}", help=f"Remove {s_name}"):
+                                        skills.pop(i)
+                                        resume_data["skills"] = skills
+                                        st.rerun()
+
+                                c_txt, c1, c2, c3, c4, c5, _ = st.columns([2.6, 0.4, 0.4, 0.4, 0.4, 0.4, 2.0], gap="small")
+                                with c_txt:
+                                    render_html(f"""<div style="font-size: 0.86rem; font-weight: 600; color: #E0E0EA; display: flex; align-items: center; min-height: 28px;">
+                                        Proficiency Level:&nbsp;<span style="color: {active_color}; font-weight: 800;">{curr_prof}</span>
+                                    </div>""")
+
+                                circ_cols = [c1, c2, c3, c4, c5]
+                                for lvl_idx, p_data in enumerate(PROFICIENCY_LEVELS, start=1):
+                                    with circ_cols[lvl_idx - 1]:
+                                        is_lit = (lvl_idx <= curr_step_idx)
+                                        render_html(f"""<div class="circ-marker circ-lvl-{lvl_idx} {'circ-lit' if is_lit else 'circ-unlit'}">
+                                            <span class="circ-tooltip">{p_data['level']}</span>
+                                        </div>""")
+                                        if st.button("●", key=f"btn_circ_{i}_{lvl_idx}"):
+                                            sk["proficiency"] = p_data["level"]
+                                            resume_data["skills"] = skills
+                                            st.rerun()
+
+            # STEP 6: PROJECTS
+            elif current_step == 6:
                 projects = resume_data.get("projects", [])
                 if not isinstance(projects, list):
                     projects = []
@@ -2090,6 +2227,14 @@ def render_resume_editor_screen(
                                 key=f"p_contrib_{i}",
                             )
 
+                with st.expander("✨ AI Project STAR Impact Polish", expanded=False):
+                    st.caption("Proven STAR frameworks to showcase your engineering projects:")
+                    st.markdown("""
+- **Architecture & Performance:** *Architected event-driven microservices processing 15K req/sec with 99.99% uptime on AWS/Docker.*
+- **Cost & Efficiency:** *Engineered automated resource reclamation daemon reducing monthly cloud infrastructure spend by 28%.*
+- **Algorithmic Innovation:** *Implemented multi-tenant caching mechanism cutting database read throughput requirements by 50%.*
+                    """)
+
                 if st.button("➕ Add Project", key="btn_add_project", type="primary", use_container_width=True):
                     projects.append({
                         "title": "New High-Impact Project",
@@ -2104,114 +2249,6 @@ def render_resume_editor_screen(
                     })
                     resume_data["projects"] = projects
                     st.rerun()
-
-            # STEP 6: TECHNICAL AND PROFESSIONAL SKILLS
-            elif current_step == 6:
-                skills = resume_data.get("skills", [])
-                if not isinstance(skills, list):
-                    skills = []
-
-                tgl_show_prof = st.toggle(
-                    "Include proficiency levels on exported resume PDF & preview",
-                    value=resume_data.get("show_skill_proficiency", True),
-                    key="tgl_skill_prof_export",
-                    help="Switch off to hide proficiency tags from the resume while preserving your saved proficiency data.",
-                )
-                resume_data["show_skill_proficiency"] = tgl_show_prof
-
-                render_html("<div style='height: 8px;'></div>")
-
-                c_sk_name, c_sk_cat, c_sk_add = st.columns([2.6, 1.8, 1.2], gap="medium")
-                with c_sk_name:
-                    input_nonce = st.session_state.get("skill_input_nonce", 0)
-                    new_sk_name = st.text_input(
-                        "Skill Name",
-                        placeholder="e.g. Python, React, Docker, Machine Learning",
-                        key=f"txt_add_skill_{input_nonce}",
-                    )
-                with c_sk_cat:
-                    cat_options = ["Technical Skills", "Professional Skills", "Soft Skills", "Tools & Frameworks", "Leadership"]
-                    saved_cat_idx = st.session_state.get("last_skill_cat_idx", 0)
-                    new_sk_cat = st.selectbox(
-                        "Category",
-                        options=cat_options,
-                        index=saved_cat_idx if saved_cat_idx < len(cat_options) else 0,
-                        key="sel_add_skill_cat",
-                    )
-                with c_sk_add:
-                    render_html("<div class='add-skill-btn-marker'></div>")
-                    if st.button("➕ Add Skill", key="btn_add_single_skill", type="primary", use_container_width=True):
-                        val = new_sk_name.strip()
-                        if not val:
-                            st.error("Please enter a skill name before clicking Add.")
-                        elif any(s.get("name", "").strip().lower() == val.lower() for s in skills if isinstance(s, dict)):
-                            st.warning(f"Skill '{val}' is already present in your skills list.")
-                        else:
-                            skills.append({
-                                "name": val,
-                                "category": new_sk_cat,
-                                "proficiency": "Experienced",
-                            })
-                            resume_data["skills"] = skills
-                            st.session_state["skill_input_nonce"] = input_nonce + 1
-                            st.session_state["last_skill_cat_idx"] = cat_options.index(new_sk_cat)
-                            st.toast(f"Added skill '{val}' under {new_sk_cat}!", icon="✅")
-                            st.rerun()
-
-                if skills:
-                    render_html("<div style='height: 12px;'></div>")
-                    for i, sk in enumerate(skills):
-                        if isinstance(sk, dict):
-                            s_name = sk.get("name", "Skill")
-                            s_cat = sk.get("category", "Technical")
-                            curr_prof = sk.get("proficiency", "Experienced")
-
-                            mapping = {"Intermediate": "Experienced", "Novice": "Beginner", "Proficient": "Skillful", "Master": "Expert"}
-                            if curr_prof in mapping:
-                                curr_prof = mapping[curr_prof]
-                                sk["proficiency"] = curr_prof
-                            elif curr_prof not in [p["level"] for p in PROFICIENCY_LEVELS]:
-                                curr_prof = "Experienced"
-                                sk["proficiency"] = curr_prof
-
-                            curr_step_idx = next((p["step"] for p in PROFICIENCY_LEVELS if p["level"] == curr_prof), 3)
-                            active_color = next((p["color"] for p in PROFICIENCY_LEVELS if p["level"] == curr_prof), "#22C55E")
-
-                            with st.container(border=True):
-                                c_card_top, c_sdup, c_sdel = st.columns([5.2, 0.6, 0.6])
-                                with c_card_top:
-                                    render_html(f"""<div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex-wrap: wrap;">
-                                        <span style="font-weight: 800; font-size: 1rem; color: #FFFFFF;">{s_name}</span>
-                                        <span style="background: #24242F; color: #E0E0EA; border: 1px solid #34343D; font-size: 0.70rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">{s_cat}</span>
-                                    </div>""")
-                                with c_sdup:
-                                    if st.button("📋", key=f"btn_dup_sk_{i}", help=f"Duplicate {s_name}"):
-                                        skills.insert(i + 1, copy.deepcopy(sk))
-                                        resume_data["skills"] = skills
-                                        st.rerun()
-                                with c_sdel:
-                                    if st.button("🗑️", key=f"btn_del_sk_{i}", help=f"Remove {s_name}"):
-                                        skills.pop(i)
-                                        resume_data["skills"] = skills
-                                        st.rerun()
-
-                                c_txt, c1, c2, c3, c4, c5, _ = st.columns([2.6, 0.4, 0.4, 0.4, 0.4, 0.4, 2.0], gap="small")
-                                with c_txt:
-                                    render_html(f"""<div style="font-size: 0.86rem; font-weight: 600; color: #E0E0EA; display: flex; align-items: center; min-height: 28px;">
-                                        Proficiency Level:&nbsp;<span style="color: {active_color}; font-weight: 800;">{curr_prof}</span>
-                                    </div>""")
-
-                                circ_cols = [c1, c2, c3, c4, c5]
-                                for lvl_idx, p_data in enumerate(PROFICIENCY_LEVELS, start=1):
-                                    with circ_cols[lvl_idx - 1]:
-                                        is_lit = (lvl_idx <= curr_step_idx)
-                                        render_html(f"""<div class="circ-marker circ-lvl-{lvl_idx} {'circ-lit' if is_lit else 'circ-unlit'}">
-                                            <span class="circ-tooltip">{p_data['level']}</span>
-                                        </div>""")
-                                        if st.button("●", key=f"btn_circ_{i}_{lvl_idx}"):
-                                            sk["proficiency"] = p_data["level"]
-                                            resume_data["skills"] = skills
-                                            st.rerun()
 
             # STEP 7: CERTIFICATIONS
             elif current_step == 7:
@@ -2600,7 +2637,7 @@ def render_resume_editor_screen(
         c_prev_head, c_prev_fn, c_prev_dl = st.columns([1.1, 1.8, 1.5], gap="small")
         with c_prev_head:
             render_html(f"""<div style="font-size: 0.90rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; height: 38px;">
-                📄 Live Preview <span style="font-size: 0.72rem; color: #7965D8; margin-left: 6px; font-weight: 600;">({selected_tmpl_obj['name']})</span>
+                📄 Live A4 Preview <span style="font-size: 0.72rem; color: #7965D8; margin-left: 6px; font-weight: 600;">({selected_tmpl_obj['name']})</span>
             </div>""")
         with c_prev_fn:
             new_fn = st.text_input(
@@ -2669,34 +2706,32 @@ def render_resume_builder_page() -> None:
     st.markdown(
         """
         <style>
-        /* 1. Main Canvas & Fonts */
-        div[data-testid="stAppViewContainer"],
-        section[data-testid="stMain"],
-        div[data-testid="stMainBlockContainer"] {
+        /* 1. Main Canvas & Fonts - Natural Scrolling Architecture */
+        div[data-testid="stAppViewContainer"] {
             background-color: #111111 !important;
             color: #FFFFFF !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            height: 100vh !important;
+        }
+        section[data-testid="stMain"] {
+            background-color: #111111 !important;
+            color: #FFFFFF !important;
+            overflow-y: visible !important;
+            min-height: 100vh !important;
+        }
+        div[data-testid="stMainBlockContainer"] {
+            background-color: transparent !important;
+            color: #FFFFFF !important;
+            max-width: 100% !important;
+            padding-top: 1rem !important;
+            padding-bottom: 3rem !important;
+            overflow: visible !important;
         }
 
-        /* 2. Sidebar Alignment */
+        /* 2. Sidebar Alignment - Natural Flow */
         section[data-testid="stSidebar"] {
-            background-color: #16161D !important;
-            border-right: 1px solid #34343D !important;
-        }
-        section[data-testid="stSidebar"] * {
-            color: #E0E0EA !important;
-        }
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label {
-            color: #E0E0EA !important;
-        }
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-            background-color: #24242F !important;
-            color: #FFFFFF !important;
-        }
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"],
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
-            background-color: rgba(121, 101, 216, 0.22) !important;
-            color: #FFFFFF !important;
-            border-left: 4px solid #7965D8 !important;
+            overflow-y: auto !important;
         }
 
         /* 3. Section Containers & Streamlit Expanders */
@@ -3143,8 +3178,9 @@ def render_resume_builder_page() -> None:
             border-radius: 12px !important;
             padding: 1.25rem !important;
             overflow-y: auto !important;
-            max-height: calc(100vh - 180px) !important;
-            box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.45) !important;
+            max-height: calc(100vh - 165px) !important;
+            overscroll-behavior: auto !important;
+            box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.55), 0 8px 24px rgba(0,0,0,0.4) !important;
         }
         .resume-paper-page {
             background-color: #FFFFFF !important;

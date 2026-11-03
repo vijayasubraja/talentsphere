@@ -62,8 +62,8 @@ def test_1_category_steps_exact_order():
         "Professional Summary",
         "Work Experience",
         "Education",
+        "Skills",
         "Projects",
-        "Technical and Professional Skills",
         "Certifications",
         "Achievements",
         "References",
@@ -190,11 +190,11 @@ def test_5_direct_step_pill_navigation():
     at.run()
     assert not at.exception
 
-    # Click pill 6 (Technical and Professional Skills)
-    at.button(key="btn_step_pill_6").click()
+    # Click pill 5 (Skills)
+    at.button(key="btn_step_pill_5").click()
     at.run()
     assert not at.exception
-    assert at.session_state["resume_category_step"] == 6
+    assert at.session_state["resume_category_step"] == 5
     assert at.button(key="btn_add_single_skill") is not None
 
 
@@ -212,7 +212,7 @@ def test_6_skill_proficiency_colors_and_interaction():
     at.session_state["user_id"] = 1
     at.session_state["current_page"] = "Resume Builder"
     at.session_state["resume_builder_step"] = "editor"
-    at.session_state["resume_category_step"] = 6
+    at.session_state["resume_category_step"] = 5
     at.run()
     assert not at.exception
 

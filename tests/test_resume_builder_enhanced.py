@@ -100,8 +100,8 @@ def test_2_exact_10_sections_order():
         "Professional Summary",
         "Work Experience",
         "Education",
+        "Skills",
         "Projects",
-        "Technical and Professional Skills",
         "Certifications",
         "Achievements",
         "References",
@@ -168,13 +168,13 @@ def test_4_professional_summary_and_ai():
 
 
 def test_5_projects_features():
-    """Verify Projects section has Add Project button, ongoing toggle, tech, and description on Step 5."""
+    """Verify Projects section has Add Project button, ongoing toggle, tech, and description on Step 6."""
     at = AppTest.from_file(APP_PATH, default_timeout=30)
     at.session_state["is_authenticated"] = True
     at.session_state["user_id"] = 1
     at.session_state["current_page"] = "Resume Builder"
     at.session_state["resume_builder_step"] = "editor"
-    at.session_state["resume_category_step"] = 5
+    at.session_state["resume_category_step"] = 6
     at.run()
     assert not at.exception
 
@@ -213,13 +213,13 @@ def test_7_education_features():
 
 
 def test_8_technical_skills_features():
-    """Verify Technical and Professional Skills supports name, category selection, and add on Step 6."""
+    """Verify Technical and Professional Skills supports name, category selection, and add on Step 5."""
     at = AppTest.from_file(APP_PATH, default_timeout=30)
     at.session_state["is_authenticated"] = True
     at.session_state["user_id"] = 1
     at.session_state["current_page"] = "Resume Builder"
     at.session_state["resume_builder_step"] = "editor"
-    at.session_state["resume_category_step"] = 6
+    at.session_state["resume_category_step"] = 5
     at.run()
     assert any(k and k.startswith("txt_add_skill") for k in [t.key for t in at.text_input])
     assert at.selectbox(key="sel_add_skill_cat") is not None

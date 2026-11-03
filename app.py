@@ -114,11 +114,18 @@ if query_reset_token:
         st.session_state["auth_tab"] = "reset"
         st.session_state["current_page"] = "Login"
 
+if "sidebar_collapsed" not in st.session_state:
+    st.session_state["sidebar_collapsed"] = False
+
 if "is_authenticated" not in st.session_state:
     st.session_state["is_authenticated"] = False
 
 if "current_page" not in st.session_state:
-    st.session_state["current_page"] = "Login"
+    query_page = st.query_params.get("page")
+    if query_page and query_page in ("Dashboard", "Employee Profile", "Skills & Goals", "Resume Builder", "Career Development"):
+        st.session_state["current_page"] = query_page
+    else:
+        st.session_state["current_page"] = "Login"
 
 if "employee" not in st.session_state:
     sample_data = get_initial_sample_data()
@@ -134,7 +141,11 @@ if not st.session_state.get("is_authenticated", False) and st.session_state.get(
             st.session_state["is_authenticated"] = True
             st.session_state["user_id"] = valid_user["id"]
             st.session_state["remember_token"] = valid_user["signed_token"]
-            st.session_state["current_page"] = "Dashboard"
+            query_page = st.query_params.get("page")
+            if query_page and query_page in ("Dashboard", "Employee Profile", "Skills & Goals", "Resume Builder", "Career Development"):
+                st.session_state["current_page"] = query_page
+            elif "current_page" not in st.session_state or st.session_state["current_page"] == "Login":
+                st.session_state["current_page"] = "Dashboard"
 
             # Hydrate employee session data from DB
             profile = services.core.get_profile(valid_user["id"])
@@ -247,6 +258,11 @@ else:
 
     from components.sidebar import render_sidebar
     active_page = render_sidebar(cookie_controller=cookie_controller)
+    try:
+        if st.query_params.get("page") != active_page:
+            st.query_params["page"] = active_page
+    except Exception:
+        pass
 
     from views.dashboard_view import render_dashboard_page
     from views.profile_view import render_profile_page
